@@ -1,0 +1,37 @@
+#Creating views
+1. Create a View for Booking Details with Vehicle Info
+CREATE VIEW BookingDetails AS
+SELECT B.BookingID, V.OwnerName, V.VehicleNumber, 
+       B.StartTime, B.EndTime, B.Status, B.PaymentStatus
+FROM Booking B
+INNER JOIN Vehicle V ON B.VehicleID = V.VehicleID;
+
+SELECT * FROM BookingDetails;
+
+2. Create a View for Payments with Booking Info
+CREATE VIEW PaymentSummary AS
+SELECT P.PaymentID, V.OwnerName, V.VehicleNumber, 
+       P.Amount, P.PaymentMode, P.PaymentDate
+FROM Payment P
+INNER JOIN Booking B ON P.BookingID = B.BookingID
+INNER JOIN Vehicle V ON B.VehicleID = V.VehicleID;
+
+SELECT * FROM PaymentSummary;
+
+3. Create a View for Parking Slot Occupancy
+CREATE VIEW SlotStatus AS
+SELECT S.SlotID, S.SlotNumber, S.Status, L.Name AS ParkingLotName
+FROM ParkingSlot S
+INNER JOIN ParkingLot L ON S.ParkingLotID = L.ParkingLotID;
+
+SELECT * FROM SlotStatus;
+
+4. Create a View for Total Revenue per Vehicle
+CREATE VIEW VehicleRevenue AS
+SELECT V.OwnerName, V.VehicleNumber, SUM(P.Amount) AS TotalPaid
+FROM Vehicle V
+INNER JOIN Booking B ON V.VehicleID = B.VehicleID
+INNER JOIN Payment P ON B.BookingID = P.BookingID
+GROUP BY V.OwnerName, V.VehicleNumber;
+
+SELECT * FROM VehicleRevenue;
